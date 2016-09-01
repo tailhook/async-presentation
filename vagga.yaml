@@ -1,0 +1,37 @@
+containers:
+  html5tools:
+    setup:
+    - !Alpine v3.3
+    - !PipConfig { dependencies: true }
+    - !Py3Install [rst2html5-tools, pygments]
+
+commands:
+  make: !Command
+    container: html5tools
+    environ:
+      PYTHONHASHSEED: 6
+      REVEAL_OPTS_WHITE: "theme=simple,\
+        width=640,\
+        height=480,\
+        maxScale=10,\
+        margin=0"
+      REVEAL_OPTS_BLACK: "theme=black,\
+        width=640,\
+        height=480,\
+        maxScale=10,\
+        margin=0"
+    run: |
+      mkdir out 2>/dev/null
+      cp *.svg out
+      rst2html5 --jquery \
+        --reveal-js \
+        --reveal-js-opts $REVEAL_OPTS_WHITE \
+        --stylesheet my.css \
+        presentation.rst \
+        > out/index.html
+      rst2html5 --jquery \
+        --reveal-js \
+        --reveal-js-opts $REVEAL_OPTS_BLACK \
+        --stylesheet my.css \
+        presentation.rst \
+        > out/black.html
