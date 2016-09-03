@@ -2,8 +2,8 @@
    :class: hidden
 
 
-All Things Async
-================
+Async is The New Default
+========================
 
 
 Why Async?
@@ -33,9 +33,16 @@ Sync → Async
 * 70% CPU usage
 
 
+Failure
+=======
+
+* Latency: 50 ms → 3-15 sec
+* Response: 50 ms → 0.5-1 sec
+* Slow: 0.04 / 10 RPS
+
+
 Warning: code ahead!
 ====================
-
 
 
 Example
@@ -62,6 +69,18 @@ Simultaneous
         return combine(value1, value2)
 
 
+:hidden:`Pipelining`
+====================
+
+.. image:: pipe_vs_seq.svg
+
+
+Keep-Alive
+==========
+
+Nginx → Backend
+
+
 Request Timeout
 ===============
 
@@ -71,6 +90,40 @@ Request Timeout
         async with session.get(url) as response:
             assert response.status == 200
             return await response.read()
+
+
+Connection Pool
+===============
+
+* 100 input connections
+* 10 db connections
+
+
+socket.close()
+==============
+
+
+Task Queues
+===========
+
+asyncio.async ≠ celery
+
+
+Async -> Sync
+=============
+
+Pool Size = 1
+
+
+
+WebSockets
+==========
+
+Browser → Gateway → Backend
+
+
+GUI
+===
 
 
 Atomicity
@@ -93,7 +146,7 @@ Greenlets
 .. code-block:: python
 
     async def transfer(amount, payer, payee, server):
-        with payer.lock(), payee.lock():
+        with lock(payer, payee):
             if not payer.sufficient_funds(amount):
                 raise InsufficientFunds()
             payee.deposit(amount)
@@ -106,8 +159,5 @@ Greenlets: No Monkeypatching!
 =============================
 
 
-:hidden:`Pipelining`
-====================
-
-.. image:: pipe_vs_seq.svg
-
+Q & A
+=====
